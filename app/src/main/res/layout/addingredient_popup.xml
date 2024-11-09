@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="180dp"
+    android:layout_gravity="center"
+    android:background="@drawable/round_corner_input">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    >
+    <TextView
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add ingredient"
+        android:textColor="#004d40"
+        android:textSize="30dp"></TextView>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:text="Input here.."
+        android:textSize="20dp"
+        android:textStyle="italic"
+        android:layout_marginHorizontal="10dp"
+        android:background="@drawable/round_corner_airep"></EditText>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center">
+        <ImageButton
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/baseline_cancel_24"
+            android:backgroundTint="@color/white"
+            >
+
+        </ImageButton>
+        <ImageButton
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/baseline_check_circle_24"
+            android:backgroundTint="@color/white"
+            >
+
+        </ImageButton>
+    </LinearLayout>
+</LinearLayout>
+</RelativeLayout>
