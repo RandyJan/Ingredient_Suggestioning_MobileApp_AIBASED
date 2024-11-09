@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1006217533206",
+    "project_id": "ingredientsuggestiongene-4b366",
+    "storage_bucket": "ingredientsuggestiongene-4b366.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1006217533206:android:a6bfec8c74d59e390c2237",
+        "android_client_info": {
+          "package_name": "com.example.aibasedingredient"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3hqG0TaaGRQQFC9L6mT3Hkb9UfhYTAmI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

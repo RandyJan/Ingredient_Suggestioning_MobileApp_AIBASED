@@ -27,6 +27,7 @@
         android:layout_height="160dp"
         android:src="@drawable/baseline_account_circle_24"/>
     <EditText
+        android:id="@+id/loginUsernameField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Username"
@@ -39,6 +40,7 @@
         android:textSize="20sp"
         android:background="@drawable/round_corner_input"></EditText>
     <EditText
+        android:id="@+id/loginPasswordField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
@@ -51,6 +53,7 @@
         android:textSize="20sp"
         android:background="@drawable/round_corner_input"></EditText>
     <Button
+        android:id="@+id/loginButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Login"
@@ -70,6 +73,7 @@
         android:layout_marginTop="20dp">
     </TextView>
     <TextView
+        android:id="@+id/signUpText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Sign up"
