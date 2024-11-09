@@ -28,6 +28,7 @@
             android:layout_weight="1">
 
             <ImageButton
+                android:id="@+id/burgerButton"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:backgroundTint="#004d40"
@@ -139,6 +140,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/homescreenDrawer"
         android:layout_width="250dp"
         android:layout_height="match_parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -147,7 +149,7 @@
         android:background="@drawable/loginbg"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:visibility="visible"
+        android:visibility="gone"
         >
     <ImageButton
         android:layout_width="100dp"
