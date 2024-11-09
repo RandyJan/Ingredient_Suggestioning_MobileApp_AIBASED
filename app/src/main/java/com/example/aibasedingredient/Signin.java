@@ -25,6 +25,7 @@ import com.google.firebase.Firebase;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 
 public class Signin extends AppCompatActivity {
 
@@ -102,10 +103,13 @@ public class Signin extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    MainActivity.currentUser = auth.getCurrentUser();
-                    String userID = MainActivity.currentUser.getUid();
-                    UsersClass newUser = new UsersClass(userID, email, username);
-                    MainActivity.database.getReference().child("Users").child(userID).setValue(newUser);
+                    Toast.makeText(currentContext, "Account created successfully", Toast.LENGTH_LONG).show();
+                    FirebaseUser newlyRegisteredUser = MainActivity.auth.getCurrentUser();
+                    String userID = newlyRegisteredUser.getUid();
+                    UsersClass newUser = new UsersClass(userID, newlyRegisteredUser.getEmail(), username);
+                    DatabaseReference reference = MainActivity.database.getReference();
+                    reference.child("Users").child(userID).setValue(newUser);
+                    startActivity(new Intent(currentContext, homescreen.class));
                 }
                 else{
                     Toast.makeText(currentContext, task.getException().getMessage(), Toast.LENGTH_LONG).show();
