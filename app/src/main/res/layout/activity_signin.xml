@@ -17,10 +17,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="APP NAME"
+            android:text="Ingredient Substitution"
             android:textColor="@color/white"
             android:gravity="center"
-            android:textSize="70dp"
+            android:textSize="50dp"
             android:textStyle="bold"></TextView>
         <ImageView
             android:layout_width="160dp"
