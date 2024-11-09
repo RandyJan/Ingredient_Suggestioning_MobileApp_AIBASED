@@ -121,6 +121,7 @@
                     android:padding="16dp"
                     android:textSize="20dp"
                     android:textStyle="italic"
+                    android:inputType="text"
                     android:layout_marginHorizontal="5dp"
                     android:layout_marginBottom="5dp"
                     ></EditText>
@@ -146,7 +147,7 @@
         android:background="@drawable/loginbg"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:visibility="invisible"
+        android:visibility="visible"
         >
     <ImageButton
         android:layout_width="100dp"
@@ -219,6 +220,21 @@
                 android:layout_height="50dp"
                 android:src="@drawable/baseline_edit_24"></ImageButton>
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+        </LinearLayout>
+        <ImageButton
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/baseline_logout_24"
+            android:backgroundTint="#33691e"
+            android:layout_marginRight="90dp"
+            >
+
+        </ImageButton>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
