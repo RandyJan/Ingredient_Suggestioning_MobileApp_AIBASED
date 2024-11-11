@@ -149,7 +149,7 @@
         android:background="@drawable/loginbg"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:visibility="gone"
+        android:visibility="visible"
         >
     <ImageButton
         android:layout_width="100dp"
@@ -191,6 +191,7 @@
         android:paddingLeft="10dp"
         >
         <ImageButton
+            android:id="@+id/addDislikesButton"
             android:layout_width="65dp"
             android:layout_height="50dp"
             android:src="@drawable/baseline_add_24"></ImageButton>
@@ -214,6 +215,7 @@
             android:layout_height="wrap_content"
             android:paddingLeft="10dp">
             <ImageButton
+                android:id="@+id/addAllergicToButton"
                 android:layout_width="65dp"
                 android:layout_height="50dp"
                 android:src="@drawable/baseline_add_24"></ImageButton>

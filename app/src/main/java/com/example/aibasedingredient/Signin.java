@@ -106,9 +106,9 @@ public class Signin extends AppCompatActivity {
                     Toast.makeText(currentContext, "Account created successfully", Toast.LENGTH_LONG).show();
                     FirebaseUser newlyRegisteredUser = MainActivity.auth.getCurrentUser();
                     String userID = newlyRegisteredUser.getUid();
-                    UsersClass newUser = new UsersClass(userID, newlyRegisteredUser.getEmail(), username);
-                    DatabaseReference reference = MainActivity.database.getReference();
-                    reference.child("Users").child(userID).setValue(newUser);
+                    MainActivity.loggedInUser = new UsersClass(userID, newlyRegisteredUser.getEmail(), username);
+                    DatabaseReference reference = MainActivity.databaseReference;
+                    reference.child("Users").child(userID).setValue(MainActivity.loggedInUser);
                     startActivity(new Intent(currentContext, homescreen.class));
                 }
                 else{

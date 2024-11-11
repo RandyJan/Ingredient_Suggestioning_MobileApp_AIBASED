@@ -22,6 +22,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
@@ -33,7 +35,10 @@ public class MainActivity extends AppCompatActivity {
     public static FirebaseAuth auth;
 
     public static FirebaseDatabase database;
+    public static DatabaseReference databaseReference;
     Context currentContext;
+
+    public static UsersClass loggedInUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +67,10 @@ public class MainActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         currentUser = auth.getCurrentUser();
         database = FirebaseDatabase.getInstance();
+        databaseReference = database.getReference();
 
         if(currentUser != null){
-            startActivity(new Intent(this, homescreen.class));
+             SetLoggedInUser();
         }
     }
 
@@ -83,6 +89,18 @@ public class MainActivity extends AppCompatActivity {
                 else{
                     Toast.makeText(currentContext, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                 }
+            }
+        });
+    }
+
+    private void SetLoggedInUser(){
+        String userID = currentUser.getUid();
+        databaseReference.child("Users").child(userID).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                String loggedInUsername = task.getResult().child("username").getValue().toString();
+                loggedInUser = new UsersClass(userID, currentUser.getEmail(), loggedInUsername);
+                startActivity(new Intent(currentContext, homescreen.class));
             }
         });
     }
