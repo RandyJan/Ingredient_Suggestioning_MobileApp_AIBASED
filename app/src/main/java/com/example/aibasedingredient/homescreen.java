@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.window.OnBackInvokedCallback;
 import android.window.OnBackInvokedDispatcher;
@@ -27,7 +28,9 @@ import com.example.aibasedingredient.databinding.ActivityHomescreenBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,6 +43,12 @@ public class homescreen extends AppCompatActivity {
     LinearLayout drawerView;
     Dialog popUpDialog;
     EditText allergyOrDislikeField;
+    List<String> currentUserDislikes;
+    List<String> currentUserAllergies;
+    TextView usernameView;
+    TextView emailView;
+    TextView dislikeView;
+    TextView allergiesView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +75,11 @@ public class homescreen extends AppCompatActivity {
         drawerView = homeScreemAct.homescreenDrawer;
         ImageButton burgerButton = homeScreemAct.burgerButton;
         burgerButton.setOnClickListener(c->SetDrawerVisible());
+
+        usernameView = homeScreemAct.drawerUsernameText;
+        emailView = homeScreemAct.drawerEmailText;
+        dislikeView = homeScreemAct.drawerDislikesText;
+        allergiesView = homeScreemAct.drawerAllergiesText;
         ImageButton addDislikeButton = homeScreemAct.addDislikesButton;
         addDislikeButton.setOnClickListener(c->showDialogForAddDislike());
         ImageButton addAllergyButton = homeScreemAct.addAllergicToButton;
@@ -73,11 +87,86 @@ public class homescreen extends AppCompatActivity {
         ImageButton logoutButton = homeScreemAct.logoutButton;
         logoutButton.setOnClickListener(c->LogoutUser());
 
+        SetUserInfoInDrawer();
+
         popUpDialog = new Dialog(this);
         popUpDialog.setContentView(R.layout.addingredient_popup);
         allergyOrDislikeField = popUpDialog.findViewById(R.id.allergyOrDislikeField);
         ImageButton closeDialogButton = popUpDialog.findViewById(R.id.closeAddingDialog);
         closeDialogButton.setOnClickListener(c->popUpDialog.dismiss());
+
+        currentUserDislikes = new ArrayList<>();
+        currentUserAllergies = new ArrayList<>();
+
+        GetAndUpdateDislikes();
+        GetAndUpdateAllergies();
+    }
+
+    private void SetUserInfoInDrawer(){
+        String usernameDefaultString = String.valueOf(usernameView.getText()) + " " + MainActivity.loggedInUser.username;
+        usernameView.setText(usernameDefaultString);
+
+        String userEmailDefaultString = String.valueOf(emailView.getText()) + " " + MainActivity.loggedInUser.userEmail;
+        emailView.setText(userEmailDefaultString);
+    }
+
+    private void GetAndUpdateDislikes(){
+        MainActivity.databaseReference.child("Dislikes").child(MainActivity.loggedInUser.userID).addValueEventListener(new ValueEventListener() {
+            @SuppressLint("NewApi")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.child("data").exists()){
+                    String dislikes = String.valueOf(snapshot.child("data").getValue());
+                    currentUserDislikes = Arrays.stream(dislikes.split(",")).toList();
+                    StringBuilder updatedDislike = new StringBuilder();
+                    int dislikeCount = currentUserDislikes.size();
+                    int count = 0;
+                    for(String data : currentUserDislikes){
+                        count++;
+                        String sign = (count < dislikeCount) ? "," : ".";
+                        Log.d("Dislikes", data);
+                        updatedDislike.append(data).append(sign);
+                    }
+                    String stringView = "Dislikes: " + updatedDislike;
+                    dislikeView.setText(stringView);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void GetAndUpdateAllergies(){
+        MainActivity.databaseReference.child("Allergies").child(MainActivity.loggedInUser.userID).addValueEventListener(new ValueEventListener() {
+            @SuppressLint("NewApi")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.child("data").exists()){
+                    String dislikes = String.valueOf(snapshot.child("data").getValue());
+                    currentUserAllergies = Arrays.stream(dislikes.split(",")).toList();
+
+                    StringBuilder updatedAllergies = new StringBuilder();
+                    int allergyCount = currentUserAllergies.size();
+                    int count = 0;
+                    for(String data : currentUserAllergies){
+                        count++;
+                        String sign = (count < allergyCount) ? "," : ".";
+                        Log.d("Allergies", data);
+                        updatedAllergies.append(data).append(sign);
+                    }
+                    String stringView = "Allergic to: " + updatedAllergies;
+                    allergiesView.setText(stringView);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
 
