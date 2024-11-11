@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,8 +26,15 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.aibasedingredient.databinding.ActivityHomescreenBinding;
+import com.google.ai.client.generativeai.GenerativeModel;
+import com.google.ai.client.generativeai.java.GenerativeModelFutures;
+import com.google.ai.client.generativeai.type.Content;
+import com.google.ai.client.generativeai.type.GenerateContentResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,6 +43,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class homescreen extends AppCompatActivity {
 
@@ -49,6 +59,10 @@ public class homescreen extends AppCompatActivity {
     TextView emailView;
     TextView dislikeView;
     TextView allergiesView;
+    EditText queryField;
+    GenerativeModel generativeModel;
+    GenerativeModelFutures model;
+    LinearLayout queryDataExchange;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +114,95 @@ public class homescreen extends AppCompatActivity {
 
         GetAndUpdateDislikes();
         GetAndUpdateAllergies();
+
+        generativeModel = new GenerativeModel("gemini-1.5-flash", "AIzaSyAZjpp2l9qpZEEj4s07DLJiqLHRV_S80zE");
+        model = GenerativeModelFutures.from(generativeModel);
+
+        queryField = homeScreemAct.QueryEditText;
+        Button confirmQueryButton = homeScreemAct.confirmQueryButton;
+        confirmQueryButton.setOnClickListener(c->StartQuery());
+
+        queryDataExchange = homeScreemAct.queryExchangeData;
+    }
+
+    private String getDislikeString(){
+        StringBuilder updatedDislike = new StringBuilder();
+        int dislikeCount = currentUserDislikes.size();
+        int count = 0;
+        for(String data : currentUserDislikes){
+            count++;
+            String sign = (count < dislikeCount) ? "," : ".";
+            updatedDislike.append(data).append(sign);
+        }
+        return updatedDislike.toString();
+    }
+    private String getAlleriesString(){
+        StringBuilder updatedAllergy = new StringBuilder();
+        int allergyCount = currentUserAllergies.size();
+        int count = 0;
+        for(String data : currentUserAllergies){
+            count++;
+            String sign = (count < allergyCount) ? "," : "";
+            updatedAllergy.append(data).append(sign);
+        }
+        return updatedAllergy.toString();
+    }
+
+    private void StartQuery(){
+        String query = String.valueOf(queryField.getText());
+        String allergies = getAlleriesString();
+        String dislikes = getDislikeString();
+        String fullQueryString = "Give substitute for " + query + " for person with allergies of " + allergies + " and dislikes " + dislikes + ". Response should not have explanation.";
+
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View userQuery = inflater.inflate(R.layout.reusable_user_query_view, null);
+        TextView userMessage = userQuery.findViewById(R.id.userMessage);
+        userMessage.setText(query);
+        queryDataExchange.addView(userQuery);
+        queryField.setText("");
+
+
+        Content content = new Content.Builder().addText(fullQueryString).build();
+        Executor executor = Executors.newSingleThreadExecutor();
+        ListenableFuture<GenerateContentResponse> response = model.generateContent(content);
+        Futures.addCallback(response, new FutureCallback<GenerateContentResponse>() {
+            @SuppressLint("NewApi")
+            @Override
+            public void onSuccess(GenerateContentResponse result) {
+                String resultString = result.getText().replaceAll("\n", ",").replaceAll("-", "");
+                Log.d("QUERY RESULT", resultString);
+                List<String> suggestions = new ArrayList<>();
+                suggestions = Arrays.stream(resultString.split(",")).toList();
+
+                StringBuilder fullResult = new StringBuilder();
+                int suggestionCount = suggestions.size();
+                int loopCount = 0;
+                for(String item : suggestions){
+                    loopCount++;
+                    if(loopCount < suggestionCount){
+                        fullResult.append(item).append(",");
+                    }
+                    else{
+                        fullResult.append(" and").append(item);
+                    }
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        View AIResponse = inflater.inflate(R.layout.reusable_ai_response_view, null);
+                        TextView responseView = AIResponse.findViewById(R.id.queryResponse);
+                        responseView.setText(fullResult.toString());
+                        queryDataExchange.addView(AIResponse);
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Toast.makeText(currentContext, t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }, executor);
     }
 
     private void SetUserInfoInDrawer(){
@@ -118,15 +221,7 @@ public class homescreen extends AppCompatActivity {
                 if(snapshot.child("data").exists()){
                     String dislikes = String.valueOf(snapshot.child("data").getValue());
                     currentUserDislikes = Arrays.stream(dislikes.split(",")).toList();
-                    StringBuilder updatedDislike = new StringBuilder();
-                    int dislikeCount = currentUserDislikes.size();
-                    int count = 0;
-                    for(String data : currentUserDislikes){
-                        count++;
-                        String sign = (count < dislikeCount) ? "," : ".";
-                        Log.d("Dislikes", data);
-                        updatedDislike.append(data).append(sign);
-                    }
+                    String updatedDislike = getDislikeString();
                     String stringView = "Dislikes: " + updatedDislike;
                     dislikeView.setText(stringView);
                 }
@@ -139,6 +234,10 @@ public class homescreen extends AppCompatActivity {
         });
     }
 
+
+
+
+
     private void GetAndUpdateAllergies(){
         MainActivity.databaseReference.child("Allergies").child(MainActivity.loggedInUser.userID).addValueEventListener(new ValueEventListener() {
             @SuppressLint("NewApi")
@@ -148,7 +247,7 @@ public class homescreen extends AppCompatActivity {
                     String dislikes = String.valueOf(snapshot.child("data").getValue());
                     currentUserAllergies = Arrays.stream(dislikes.split(",")).toList();
 
-                    StringBuilder updatedAllergies = new StringBuilder();
+                    /*StringBuilder updatedAllergies = new StringBuilder();
                     int allergyCount = currentUserAllergies.size();
                     int count = 0;
                     for(String data : currentUserAllergies){
@@ -156,7 +255,8 @@ public class homescreen extends AppCompatActivity {
                         String sign = (count < allergyCount) ? "," : ".";
                         Log.d("Allergies", data);
                         updatedAllergies.append(data).append(sign);
-                    }
+                    }*/
+                    String updatedAllergies = getAlleriesString();
                     String stringView = "Allergic to: " + updatedAllergies;
                     allergiesView.setText(stringView);
                 }

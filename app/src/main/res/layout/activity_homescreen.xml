@@ -62,6 +62,7 @@
                 android:padding="15dp"
                 >
                 <LinearLayout
+                    android:id="@+id/queryExchangeData"
                     android:backgroundTint="@color/black"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -76,15 +77,15 @@
                         app:cardCornerRadius="30dp"
                         android:layout_marginBottom="8dp"
                         app:cardBackgroundColor="#eeee">
+
                         <TextView
 
                             android:layout_width="250dp"
                             android:layout_height="100dp"
                             android:backgroundTint="#eeee"
-                            android:text="Sibuyas"
-                            android:textSize="20dp"
                             android:gravity="center"
-                            />
+                            android:text="Sibuyas"
+                            android:textSize="20dp" />
                     </com.google.android.material.card.MaterialCardView>
 
 
@@ -114,6 +115,7 @@
                 android:layout_height="80dp"
                 android:layout_marginHorizontal="10dp">
                 <EditText
+                    android:id="@+id/QueryEditText"
                     android:layout_width="320dp"
                     android:layout_height="wrap_content"
                     android:text="Enter an ingredient.."
@@ -128,6 +130,7 @@
                     ></EditText>
 
                 <Button
+                    android:id="@+id/confirmQueryButton"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:backgroundTint="#004d40"
@@ -149,7 +152,7 @@
         android:background="@drawable/loginbg"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:visibility="visible"
+        android:visibility="gone"
         >
     <ImageButton
         android:layout_width="100dp"
