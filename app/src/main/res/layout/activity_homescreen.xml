@@ -50,65 +50,71 @@
         <LinearLayout
             android:background="@drawable/home_round_bg"
             android:layout_width="match_parent"
-            android:layout_height="600dp"
-            android:gravity="bottom"
+            android:layout_height="0dp"
+            android:layout_weight="5"
 
             android:orientation="vertical"
             >
-            <ScrollView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                android:padding="15dp"
-                >
-                <LinearLayout
-                    android:id="@+id/queryExchangeData"
-                    android:backgroundTint="@color/black"
+                android:layout_weight="1">
+
+                <ScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:padding="15dp"
                     android:layout_gravity="bottom"
 
                     >
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="250dp"
-                        android:layout_height="100dp"
-                        android:layout_gravity="left"
-                        app:cardCornerRadius="30dp"
-                        android:layout_marginBottom="8dp"
-                        app:cardBackgroundColor="#eeee">
+                    <LinearLayout
+                        android:id="@+id/queryExchangeData"
+                        android:backgroundTint="@color/black"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
 
-                        <TextView
-
+                        >
+                        <com.google.android.material.card.MaterialCardView
                             android:layout_width="250dp"
                             android:layout_height="100dp"
-                            android:backgroundTint="#eeee"
-                            android:gravity="center"
-                            android:text="Sibuyas"
-                            android:textSize="20dp" />
-                    </com.google.android.material.card.MaterialCardView>
+                            android:layout_gravity="left"
+                            app:cardCornerRadius="30dp"
+                            android:layout_marginBottom="8dp"
+                            app:cardBackgroundColor="#eeee">
+
+                            <TextView
+
+                                android:layout_width="250dp"
+                                android:layout_height="100dp"
+                                android:backgroundTint="#eeee"
+                                android:gravity="center"
+                                android:text="Sibuyas"
+                                android:textSize="20dp" />
+                        </com.google.android.material.card.MaterialCardView>
 
 
 
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="250dp"
-                        android:layout_height="100dp"
-                        android:minHeight="10dp"
-                        app:cardCornerRadius="30dp"
-                        android:layout_gravity="end"
-                        app:cardBackgroundColor="#448aff">
-                        <TextView
+                        <com.google.android.material.card.MaterialCardView
                             android:layout_width="250dp"
                             android:layout_height="100dp"
-                            android:backgroundTint="#9e9e9e"
-                            android:textColor="@color/white"
-                            android:gravity="center"
-                            android:text="Onion"
-                            android:textSize="20dp"
-                            android:layout_marginBottom="8dp"/>
-                    </com.google.android.material.card.MaterialCardView>
-                </LinearLayout>
-            </ScrollView>
+                            android:minHeight="10dp"
+                            app:cardCornerRadius="30dp"
+                            android:layout_gravity="end"
+                            app:cardBackgroundColor="#448aff">
+                            <TextView
+                                android:layout_width="250dp"
+                                android:layout_height="100dp"
+                                android:backgroundTint="#9e9e9e"
+                                android:textColor="@color/white"
+                                android:gravity="center"
+                                android:text="Onion"
+                                android:textSize="20dp"
+                                android:layout_marginBottom="8dp"/>
+                        </com.google.android.material.card.MaterialCardView>
+                    </LinearLayout>
+                </ScrollView>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
