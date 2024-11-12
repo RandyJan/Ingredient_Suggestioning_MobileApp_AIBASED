@@ -169,7 +169,7 @@ public class homescreen extends AppCompatActivity {
             @SuppressLint("NewApi")
             @Override
             public void onSuccess(GenerateContentResponse result) {
-                String resultString = result.getText().replaceAll("\n", ",").replaceAll("-", "");
+                String resultString = result.getText().replaceAll("\n", ",").replaceAll("-", "").replaceAll("\\*", "");
                 Log.d("QUERY RESULT", resultString);
                 List<String> suggestions = new ArrayList<>();
                 suggestions = Arrays.stream(resultString.split(",")).toList();
