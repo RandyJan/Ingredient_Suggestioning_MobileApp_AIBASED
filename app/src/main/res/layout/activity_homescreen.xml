@@ -122,7 +122,7 @@
                 android:layout_marginHorizontal="10dp">
                 <EditText
                     android:id="@+id/QueryEditText"
-                    android:layout_width="320dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="Enter an ingredient.."
                     android:background="@drawable/round_corner_input_green"
@@ -133,6 +133,7 @@
                     android:inputType="text"
                     android:layout_marginHorizontal="5dp"
                     android:layout_marginBottom="5dp"
+                    android:layout_weight="1"
                     ></EditText>
 
                 <Button
@@ -141,7 +142,7 @@
                     android:layout_height="60dp"
                     android:backgroundTint="#004d40"
                     app:icon="@drawable/baseline_send_24"
-                    app:iconSize="25dp" />
+                    app:iconSize="25dp"/>
             </LinearLayout>
 
         </LinearLayout>
