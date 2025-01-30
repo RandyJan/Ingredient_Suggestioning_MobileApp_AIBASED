@@ -17,7 +17,8 @@
 
         <activity
             android:name=".homescreen"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".Signin"
             android:exported="false" />
