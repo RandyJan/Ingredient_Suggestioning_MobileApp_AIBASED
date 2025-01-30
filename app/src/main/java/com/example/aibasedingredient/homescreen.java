@@ -101,6 +101,12 @@ public class homescreen extends AppCompatActivity {
         ImageButton logoutButton = homeScreemAct.logoutButton;
         logoutButton.setOnClickListener(c->LogoutUser());
 
+        ImageButton removeDislike = homeScreemAct.removeDislikeButton;
+        ImageButton removeAllergy = homeScreemAct.removeAllergyButton;
+        removeDislike.setOnClickListener(c->showDialogForRemovingDislike());
+        removeAllergy.setOnClickListener(c->showDialogForRemovingAllergy());
+
+
         SetUserInfoInDrawer();
 
         popUpDialog = new Dialog(this);
@@ -285,14 +291,34 @@ public class homescreen extends AppCompatActivity {
         }
     }
 
+    private void showDialogForRemovingDislike(){
+        ImageButton confirmAdding = popUpDialog.findViewById(R.id.confirmAddIngredientButton);
+        TextView dialogTitle = popUpDialog.findViewById(R.id.addOrRemoveTitle);
+        dialogTitle.setText("Remove Ingredient");
+        confirmAdding.setOnClickListener(c->RemoveDislike());
+        popUpDialog.show();
+    }
+
+    private void showDialogForRemovingAllergy(){
+        ImageButton confirmAdding = popUpDialog.findViewById(R.id.confirmAddIngredientButton);
+        TextView dialogTitle = popUpDialog.findViewById(R.id.addOrRemoveTitle);
+        dialogTitle.setText("Remove Ingredient");
+        confirmAdding.setOnClickListener(c->RemoveAllergy());
+        popUpDialog.show();
+    }
+
     private void showDialogForAddDislike(){
         ImageButton confirmAdding = popUpDialog.findViewById(R.id.confirmAddIngredientButton);
+        TextView dialogTitle = popUpDialog.findViewById(R.id.addOrRemoveTitle);
+        dialogTitle.setText("Add Ingredient");
         confirmAdding.setOnClickListener(c->AddDislike());
         popUpDialog.show();
     }
 
     private void showDialogForAddAllergy(){
         ImageButton confirmAdding = popUpDialog.findViewById(R.id.confirmAddIngredientButton);
+        TextView dialogTitle = popUpDialog.findViewById(R.id.addOrRemoveTitle);
+        dialogTitle.setText("Add Ingredient");
         confirmAdding.setOnClickListener(c->AddAllergy());
         popUpDialog.show();
     }
@@ -324,6 +350,90 @@ public class homescreen extends AppCompatActivity {
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){
                                 Toast.makeText(currentContext, "Adding dislike successful!", Toast.LENGTH_LONG).show();
+                                allergyOrDislikeField.setText("");
+                            }
+                            else{
+                                Toast.makeText(currentContext, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private void RemoveDislike(){
+        String newDislike = String.valueOf(allergyOrDislikeField.getText());
+        Log.d("Removed item", newDislike);
+        MainActivity.databaseReference.child("Dislikes").child(MainActivity.loggedInUser.userID).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @SuppressLint("NewApi")
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+                    String data = "";
+                    List<String> dislikeList = new ArrayList<>();
+                    if(task.getResult().child("data").exists()){
+                        String existingDislike = task.getResult().child("data").getValue().toString();
+
+                        dislikeList = Arrays.stream(existingDislike.split(",")).toList();
+                        //data = existingDislike;
+                        for (String s : dislikeList) {
+                            if(s.toLowerCase().equals(newDislike.toLowerCase())){
+                                continue;
+                            }
+                            data += s + ",";
+                        }
+                    }
+
+                    DislikeOrAllergyClass dislikes = new DislikeOrAllergyClass(data);
+                    MainActivity.databaseReference.child("Dislikes").child(MainActivity.loggedInUser.userID).setValue(dislikes).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                Toast.makeText(currentContext, "Removing dislike successful!", Toast.LENGTH_LONG).show();
+                                allergyOrDislikeField.setText("");
+                            }
+                            else{
+                                Toast.makeText(currentContext, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+
+    private void RemoveAllergy(){
+        String newDislike = String.valueOf(allergyOrDislikeField.getText());
+        Log.d("Removed item", newDislike);
+        MainActivity.databaseReference.child("Allergies").child(MainActivity.loggedInUser.userID).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @SuppressLint("NewApi")
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+                    String data = "";
+                    List<String> dislikeList = new ArrayList<>();
+                    if(task.getResult().child("data").exists()){
+                        String existingDislike = task.getResult().child("data").getValue().toString();
+
+                        dislikeList = Arrays.stream(existingDislike.split(",")).toList();
+
+                        //data = existingDislike;
+                        for (String s : dislikeList) {
+                            if(s.toLowerCase().equals(newDislike.toLowerCase())){
+                                continue;
+                            }
+                            data += s + ",";
+                        }
+                    }
+
+                    DislikeOrAllergyClass dislikes = new DislikeOrAllergyClass(data);
+                    MainActivity.databaseReference.child("Allergies").child(MainActivity.loggedInUser.userID).setValue(dislikes).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                Toast.makeText(currentContext, "Removing allergy successful!", Toast.LENGTH_LONG).show();
                                 allergyOrDislikeField.setText("");
                             }
                             else{
