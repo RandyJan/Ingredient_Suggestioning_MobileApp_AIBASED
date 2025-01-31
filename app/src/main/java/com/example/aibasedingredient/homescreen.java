@@ -45,6 +45,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 public class homescreen extends AppCompatActivity {
 
@@ -178,7 +179,7 @@ public class homescreen extends AppCompatActivity {
                 String resultString = result.getText().replaceAll("\n", ",").replaceAll("-", "").replaceAll("\\*", "");
                 Log.d("QUERY RESULT", resultString);
                 List<String> suggestions = new ArrayList<>();
-                suggestions = Arrays.stream(resultString.split(",")).toList();
+                suggestions = Arrays.stream(resultString.split(",")).collect(Collectors.toList());
 
                 StringBuilder fullResult = new StringBuilder();
                 int suggestionCount = suggestions.size();
@@ -226,7 +227,8 @@ public class homescreen extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.child("data").exists()){
                     String dislikes = String.valueOf(snapshot.child("data").getValue());
-                    currentUserDislikes = Arrays.stream(dislikes.split(",")).toList();
+                    Log.d(null, "dislikes are " + dislikes);
+                    currentUserDislikes = Arrays.stream(dislikes.split(",")).collect(Collectors.toList());
                     String updatedDislike = getDislikeString();
                     String stringView = "Dislikes: " + updatedDislike;
                     dislikeView.setText(stringView);
@@ -251,7 +253,7 @@ public class homescreen extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.child("data").exists()){
                     String dislikes = String.valueOf(snapshot.child("data").getValue());
-                    currentUserAllergies = Arrays.stream(dislikes.split(",")).toList();
+                    currentUserAllergies = Arrays.stream(dislikes.split(",")).collect(Collectors.toList());
 
                     /*StringBuilder updatedAllergies = new StringBuilder();
                     int allergyCount = currentUserAllergies.size();
@@ -322,6 +324,7 @@ public class homescreen extends AppCompatActivity {
         confirmAdding.setOnClickListener(c->AddAllergy());
         popUpDialog.show();
     }
+
     private void AddDislike(){
         String newDislike = String.valueOf(allergyOrDislikeField.getText());
         Log.d("Added item", newDislike);
@@ -334,7 +337,7 @@ public class homescreen extends AppCompatActivity {
                     if(task.getResult().child("data").exists()){
                         String existingDislike = task.getResult().child("data").getValue().toString();
                         List<String> dislikeList = new ArrayList<>();
-                              dislikeList = Arrays.stream(existingDislike.split(",")).toList();
+                              dislikeList = Arrays.stream(existingDislike.split(",")).collect(Collectors.toList());
                               for(String item : dislikeList){
                                 if(newDislike.toLowerCase().trim().equals(item.toLowerCase().trim())){
                                     Toast.makeText(currentContext, "Dislike is already listed", Toast.LENGTH_LONG).show();
@@ -375,7 +378,7 @@ public class homescreen extends AppCompatActivity {
                     if(task.getResult().child("data").exists()){
                         String existingDislike = task.getResult().child("data").getValue().toString();
 
-                        dislikeList = Arrays.stream(existingDislike.split(",")).toList();
+                        dislikeList = Arrays.stream(existingDislike.split(",")).collect(Collectors.toList());
                         //data = existingDislike;
                         for (String s : dislikeList) {
                             if(s.toLowerCase().equals(newDislike.toLowerCase())){
@@ -417,7 +420,7 @@ public class homescreen extends AppCompatActivity {
                     if(task.getResult().child("data").exists()){
                         String existingDislike = task.getResult().child("data").getValue().toString();
 
-                        dislikeList = Arrays.stream(existingDislike.split(",")).toList();
+                        dislikeList = Arrays.stream(existingDislike.split(",")).collect(Collectors.toList());
 
                         //data = existingDislike;
                         for (String s : dislikeList) {
@@ -459,7 +462,7 @@ public class homescreen extends AppCompatActivity {
                     if(task.getResult().child("data").exists()){
                         String existingAllergy = task.getResult().child("data").getValue().toString();
                         List<String> allergyList = new ArrayList<>();
-                        allergyList = Arrays.stream(existingAllergy.split(",")).toList();
+                        allergyList = Arrays.stream(existingAllergy.split(",")).collect(Collectors.toList());
                         for(String item : allergyList){
                             if(newAllergy.toLowerCase().trim().equals(item.toLowerCase().trim())){
                                 Toast.makeText(currentContext, "Allergy is already listed", Toast.LENGTH_LONG).show();
